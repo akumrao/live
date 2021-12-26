@@ -113,7 +113,7 @@ Boolean movieHeightOptionSet = False;
 unsigned movieFPS = 15; // default
 Boolean movieFPSOptionSet = False;
 char const* fileNamePrefix = "";
-unsigned fileSinkBufferSize = 100000;
+unsigned fileSinkBufferSize = 600000;
 unsigned socketInputBufferSize = 0;
 Boolean packetLossCompensate = False;
 Boolean syncStreams = False;
@@ -881,6 +881,8 @@ void createOutputFiles(char const* periodicFilenameSuffix) {
 	// When outputting a single medium only, we output to 'stdout
 	// (unless the '-P <interval-in-seconds>' option was given):
 	sprintf(outFileName, "stdout");
+        
+        //sprintf(outFileName, "/tmp/test8.264");  // arvind for saving it into file
       }
 
       FileSink* fileSink = NULL;

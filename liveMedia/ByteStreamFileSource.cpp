@@ -94,8 +94,14 @@ ByteStreamFileSource::~ByteStreamFileSource() {
 
 void ByteStreamFileSource::doGetNextFrame() {
   if (feof(fFid) || ferror(fFid) || (fLimitNumBytesToStream && fNumBytesToStream == 0)) {
-    handleClosure();
-    return;
+   // handleClosure();  //arvid play file in loop
+   //    return;
+      
+    if (fseek(fFid, 0, SEEK_SET))   
+    {   
+        handleClosure(); //if reset to begining fails
+        return;
+    }
   }
 
 #ifdef READ_FROM_FILES_SYNCHRONOUSLY

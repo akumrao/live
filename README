@@ -11,3 +11,44 @@
 same for 
 
 right now debug mode 
+
+
+for v for single video file
+openRTSP -v  rtsp://192.168.0.19:9554/testStream > test5.264
+
+
+
+arvind's changes
+
+ incrased the buffer  and Banksize size to 600000 and  RTCP size to 2048   
+./live555MediaServer
+
+
+pay file in loop
+void ByteStreamFileSource::doGetNextFrame() {
+     38    if (feof(fFid) || ferror(fFid) || (fLimitNumBytesToStream && fNumBytesToStream == 0)) {
+     39 -    handleClosure();
+     40 -    return;
+     41 +   // handleClosure();  //arvid play file in loop
+     42 +   //    return;
+     43 +      
+     44 +    if (fseek(fFid, 0, SEEK_SET))   
+     45 +    {   
+     46 +        handleClosure(); //if reset to begining fails
+     47 +        return;
+     48 +    }
+     49    }
+
+
+
+save the openrtsp -v output to file, by uncommenting following line
+
+         178 @@ -881,6 +881,8 @@ void createOutputFiles(char const* periodicFilenameSuffix) {
+    179         // When outputting a single medium only, we output to 'stdout
+    180         // (unless the '-P <interval-in-seconds>' option was given):
+    181         sprintf(outFileName, "stdout");
+    182 +        
+    183 +        //sprintf(outFileName, "/tmp/test8.264");  // arvind for saving it into file
+    184        }
+    185  
+
