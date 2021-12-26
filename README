@@ -1,2 +1,13 @@
-For documentation and instructions for building this software,
-see <http://www.live555.com/liveMedia/>
+./genMakefiles linux-64bit
+
+
+
+--- a/ext/live/config.linux-64bit
+      4 +++ b/ext/live/config.linux-64bit
+      5 @@ -1,4 +1,4 @@
+      6 -COMPILE_OPTS =         $(INCLUDES) -I/usr/local/include -I. -O2 -DSOCKLEN_T=socklen_t -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
+      7 +COMPILE_OPTS =         $(INCLUDES) -I/usr/local/include -I. -g -fpic -DSOCKLEN_T=socklen_t -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
+
+same for 
+
+right now debug mode 
