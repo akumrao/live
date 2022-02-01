@@ -1,0 +1,15 @@
+[Unit]
+Description=signalling server
+Documentation=https://xxx.com
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/workspace/live/mediaServer
+ExecStart=/workspace/live/mediaServer/live555MediaServer & 
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
