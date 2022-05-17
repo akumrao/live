@@ -1258,6 +1258,7 @@ Boolean RTSPClient::handleSETUPResponse(MediaSubsession& subsession, char const*
 	subsession.rtpSource()->enableRTCPReports() = False;
 	  // To avoid confusing the server (which won't start handling RTP/RTCP-over-TCP until "PLAY"), don't send RTCP "RR"s yet
 	increaseReceiveBufferTo(envir(), fInputSocketNum, 600000);
+	//increaseReceiveBufferTo(envir(), fInputSocketNum, 50*1024);
       }
       if (subsession.rtcpInstance() != NULL) subsession.rtcpInstance()->setStreamSocket(fInputSocketNum, subsession.rtcpChannelId);
       RTPInterface::setServerRequestAlternativeByteHandler(envir(), fInputSocketNum, handleAlternativeRequestByte, this);
@@ -1301,6 +1302,9 @@ Boolean RTSPClient::handlePLAYResponse(MediaSession* session, MediaSubsession* s
       MediaSubsessionIterator iter(*session);
       MediaSubsession* subsession;
       while ((subsession = iter.next()) != NULL) {
+	subsession->scale() = session->scale();
+	subsession->speed() = session->speed();
+
 	u_int16_t seqNum; u_int32_t timestamp;
 	subsession->rtpInfo.infoIsNew = False;
 	if (parseRTPInfoParams(rtpInfoParamsStr, seqNum, timestamp)) {
@@ -1328,9 +1332,9 @@ Boolean RTSPClient::handlePLAYResponse(MediaSession* session, MediaSubsession* s
       u_int16_t seqNum; u_int32_t timestamp;
       subsession->rtpInfo.infoIsNew = False;
       if (parseRTPInfoParams(rtpInfoParamsStr, seqNum, timestamp)) {
-    subsession->rtpInfo.seqNum = seqNum;
-    subsession->rtpInfo.timestamp = timestamp;
-    subsession->rtpInfo.infoIsNew = True;
+	subsession->rtpInfo.seqNum = seqNum;
+	subsession->rtpInfo.timestamp = timestamp;
+	subsession->rtpInfo.infoIsNew = True;
       }
 
       if (subsession->rtpSource() != NULL) subsession->rtpSource()->enableRTCPReports() = True; // start sending RTCP "RR"s now

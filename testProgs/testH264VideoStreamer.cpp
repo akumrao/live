@@ -29,6 +29,9 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 #include <BasicUsageEnvironment.hh>
 #include "announceURL.hh"
 #include <GroupsockHelper.hh>
+#if defined(HAVE_EPOLL_SCHEDULER)
+#include <EpollTaskScheduler.hh>
+#endif
 
 UsageEnvironment* env;
 char const* inputFileName = "test.264";
@@ -39,7 +42,11 @@ void play(); // forward
 
 int main(int argc, char** argv) {
   // Begin by setting up our usage environment:
+#if defined(HAVE_EPOLL_SCHEDULER)
+  TaskScheduler* scheduler = EpollTaskScheduler::createNew();
+#else
   TaskScheduler* scheduler = BasicTaskScheduler::createNew();
+#endif
   env = BasicUsageEnvironment::createNew(*scheduler);
 
   // Create 'groupsocks' for RTP and RTCP:
@@ -63,7 +70,7 @@ int main(int argc, char** argv) {
   rtcpGroupsock.multicastSendOnly(); // we're a SSM source
 
   // Create a 'H264 Video RTP' sink from the RTP 'groupsock':
-  OutPacketBuffer::maxSize = 600000;
+  OutPacketBuffer::increaseMaxSizeTo(600000);
   videoSink = H264VideoRTPSink::createNew(*env, &rtpGroupsock, 96);
 
   // Create (and start) a 'RTCP instance' for this RTP sink:

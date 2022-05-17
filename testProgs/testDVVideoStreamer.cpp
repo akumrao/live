@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 
   // Create a 'DV Video RTP' sink from the RTP 'groupsock':
   // (But first, make sure that its buffers will be large enough to handle the huge size of DV frames (as big as 288000).)
-  OutPacketBuffer::maxSize = 600000;
+  OutPacketBuffer::increaseMaxSizeTo(600000);
   videoSink = DVVideoRTPSink::createNew(*env, &rtpGroupsock, 96);
 
   // Create (and start) a 'RTCP instance' for this RTP sink:

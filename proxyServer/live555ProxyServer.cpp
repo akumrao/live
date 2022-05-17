@@ -19,6 +19,9 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 
 #include "liveMedia.hh"
 #include "BasicUsageEnvironment.hh"
+#if defined(HAVE_EPOLL_SCHEDULER)
+#include "EpollTaskScheduler.hh"
+#endif
 
 char const* progName;
 UsageEnvironment* env;
@@ -58,10 +61,15 @@ void usage() {
 int main(int argc, char** argv) {
   // Increase the maximum size of video frames that we can 'proxy' without truncation.
   // (Such frames are unreasonably large; the back-end servers should really not be sending frames this large!)
-  OutPacketBuffer::maxSize = 600000; // bytes
+  //OutPacketBuffer::increaseMaxSizeTo(100000); // bytes
+  OutPacketBuffer::increaseMaxSizeTo(600000); // bytes
 
   // Begin by setting up our usage environment:
+#if defined(HAVE_EPOLL_SCHEDULER)
+  TaskScheduler* scheduler = EpollTaskScheduler::createNew();
+#else
   TaskScheduler* scheduler = BasicTaskScheduler::createNew();
+#endif
   env = BasicUsageEnvironment::createNew(*scheduler);
 
   *env << "LIVE555 Proxy Server\n"

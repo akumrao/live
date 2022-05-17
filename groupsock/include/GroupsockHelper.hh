@@ -31,7 +31,7 @@ int setupStreamSocket(UsageEnvironment& env, Port port, int domain,
 
 int readSocket(UsageEnvironment& env,
 	       int socket, unsigned char* buffer, unsigned bufferSize,
-	       struct sockaddr_storage& fromAddress);
+	       struct sockaddr_storage& fromAddress /*set only if we're a datagram socket*/);
 
 Boolean writeSocket(UsageEnvironment& env,
 		    int socket, struct sockaddr_storage const& addressAndPort,
@@ -88,6 +88,9 @@ Boolean weHaveAnIPAddress(UsageEnvironment& env);
 // are INADDR_ANY (i.e., 0), specifying the default interface.)
 extern ipv4AddressBits SendingInterfaceAddr;
 extern ipv4AddressBits ReceivingInterfaceAddr;
+
+ipv4AddressBits& getSendingInterfaceAddr();
+ipv4AddressBits& getReceivingInterfaceAddr();
 
 // Allocates a randomly-chosen IPv4 SSM (multicast) address:
 ipv4AddressBits chooseRandomIPv4SSMAddress(UsageEnvironment& env);

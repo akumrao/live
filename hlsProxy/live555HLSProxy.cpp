@@ -20,6 +20,9 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 
 #include "liveMedia.hh"
 #include "BasicUsageEnvironment.hh"
+#if defined(HAVE_EPOLL_SCHEDULER)
+#include "EpollTaskScheduler.hh"
+#endif
 
 #define RTSP_CLIENT_VERBOSITY_LEVEL 0 // set to 1 for more verbose output from the "RTSPClient"
 #define OUR_HLS_SEGMENTATION_DURATION 6 /*seconds*/
@@ -59,7 +62,11 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
 
 int main(int argc, char** argv) {
   // Begin by setting up our usage environment:
+#if defined(HAVE_EPOLL_SCHEDULER)
+  TaskScheduler* scheduler = EpollTaskScheduler::createNew();
+#else
   TaskScheduler* scheduler = BasicTaskScheduler::createNew();
+#endif
   env = BasicUsageEnvironment::createNew(*scheduler);
 
   // Output information about the program (and LIVE555 version):
